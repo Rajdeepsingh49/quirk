@@ -1,4 +1,4 @@
-import { createStackNavigator } from "react-navigation";
+import { createStackNavigator } from "react-navigation-stack";
 import ThoughtScreen from "./ThoughtScreen";
 import {
   THOUGHT_SCREEN,
@@ -24,6 +24,7 @@ import {
   PREDICTION_ONBOARDING_SCREEN,
   PREDICTION_REDIRECT_SCREEN,
   SHARE_SUCCESS_SCREEN,
+  MARKDOWN_ARTICLE_SCREEN,
 } from "./screens";
 import ChallengeScreen from "./ChallengeScreen";
 import DistortionScreen from "./DistortionScreen";
@@ -46,7 +47,6 @@ import PredictionFollowUpScreen from "./predictions/PredictionFollowUpScreen";
 import PredictionSummaryScreen from "./predictions/PredictionSummaryScreen";
 import PredictionOnboardingScreen from "./predictions/PredictionOnboardingScreen";
 import PredictionThoughtRedirectScreen from "./predictions/PredictionThoughtRedirectScreen";
-import ShareSuccessScreen from "./ShareSuccessScreen";
 
 export default createStackNavigator(
   {
@@ -65,7 +65,6 @@ export default createStackNavigator(
     [FEEDBACK_LEAVE_REVIEW]: LeaveReview,
     [SURVEY_SCREEN]: SurveyScreen,
     [CHECKUP_SUMMARY_SCREEN]: CheckUpSummaryScreen,
-    [SHARE_SUCCESS_SCREEN]: ShareSuccessScreen,
 
     // Predictions
     [ASSUMPTION_SCREEN]: AssumptionScreen,

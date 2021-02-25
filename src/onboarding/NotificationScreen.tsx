@@ -4,16 +4,12 @@ import { Container, MediumHeader, HintHeader, Row, ActionButton } from "../ui";
 import ScreenProps from "../ScreenProps";
 import Constants from "expo-constants";
 import { ScrollView, Image } from "react-native";
-import haptic from "../haptic";
-import * as Haptic from "expo-haptics";
-import { FAMILIARITY_SCREEN, CHECKUP_PROMPT_SCREEN } from "./screens";
-import { initSegment, userTurnedOnNotifications } from "../stats";
+import { CHECKUP_PROMPT_SCREEN, ANXIETY_CHECK_SCREEN } from "./screens";
+import { userTurnedOnNotifications } from "../stats";
 import { Platform } from "@unimodules/core";
 import OneSignal from "react-native-onesignal";
 import { ONESIGNAL_SECRET } from "react-native-dotenv";
-import { THOUGHT_SCREEN } from "../main/screens";
-
-const Segment = initSegment();
+import { passesFeatureFlag } from "../featureflags";
 
 export default class NotificationScreen extends React.Component<
   ScreenProps,
@@ -32,7 +28,13 @@ export default class NotificationScreen extends React.Component<
     });
   }
 
-  onContinue = () => {
+  onContinue = async () => {
+    const passes = await passesFeatureFlag("prediction-onboarding", 3);
+    if (passes) {
+      this.props.navigation.navigate(ANXIETY_CHECK_SCREEN);
+      return;
+    }
+
     this.props.navigation.navigate(CHECKUP_PROMPT_SCREEN);
   };
 
@@ -58,11 +60,12 @@ export default class NotificationScreen extends React.Component<
           />
 
           <MediumHeader style={{}}>
-            Quirk comes with a reminder system designed to get you out of
+            Quirk comes with a follow-up system designed to get you out of
             particularly bad periods.
           </MediumHeader>
           <HintHeader>
-            For this feature to work, you'll need to turn notifications on.
+            For this feature to work, you'll need to turn notifications on; but
+            you can turn them off within the app if you'd like.
           </HintHeader>
 
           <Row
@@ -73,7 +76,7 @@ export default class NotificationScreen extends React.Component<
             <ActionButton
               flex={1}
               width="100%"
-              title={"Turn on reminders"}
+              title={"Continue with notifications"}
               onPress={() => {
                 userTurnedOnNotifications();
                 if (Platform.OS === "ios") {
@@ -89,7 +92,7 @@ export default class NotificationScreen extends React.Component<
             <ActionButton
               flex={1}
               width="100%"
-              title={"Continue without reminders"}
+              title={"Turn off a key feature"}
               fillColor="#EDF0FC"
               textColor={theme.darkBlue}
               onPress={this.onContinue}

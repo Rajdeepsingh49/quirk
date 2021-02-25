@@ -16,6 +16,7 @@ import {
 import haptic from "../haptic";
 import * as Haptic from "expo-haptics";
 import { Platform } from "@unimodules/core";
+import { MARKDOWN_ARTICLE_SCREEN } from "../screens";
 
 export const TAB_BAR_HEIGHT = 76;
 
@@ -71,7 +72,8 @@ export default class extends React.Component<ScreenProps> {
       tab === LOCK_SCREEN ||
       tab === CBT_ON_BOARDING_SCREEN ||
       tab === CHECKUP_SCREEN ||
-      tab === SUPPORT_SCREEN
+      tab === SUPPORT_SCREEN ||
+      tab === MARKDOWN_ARTICLE_SCREEN
     ) {
       return null;
     }
@@ -104,7 +106,12 @@ export default class extends React.Component<ScreenProps> {
           textColor={
             tab === SETTING_SCREEN ? theme.darkBlue : theme.veryLightText
           }
-          style={{ marginHorizontal: 4, padding: 0 }}
+          style={{
+            marginHorizontal: 4,
+            padding: 0,
+            borderWidth: 0,
+            borderBottomWidth: 0,
+          }}
           onPress={() => {
             haptic.impact(Haptic.ImpactFeedbackStyle.Light);
             navigation.navigate(SETTING_SCREEN);
@@ -115,7 +122,12 @@ export default class extends React.Component<ScreenProps> {
           width={100}
           fillColor={tab === MAIN_SCREEN ? theme.lightBlue : "white"}
           textColor={tab === MAIN_SCREEN ? theme.darkBlue : theme.veryLightText}
-          style={{ marginHorizontal: 4, padding: 0 }}
+          style={{
+            marginHorizontal: 4,
+            padding: 0,
+            borderWidth: 0,
+            borderBottomWidth: 0,
+          }}
           onPress={() => {
             haptic.impact(Haptic.ImpactFeedbackStyle.Light);
             navigation.navigate(MAIN_SCREEN);
@@ -128,7 +140,12 @@ export default class extends React.Component<ScreenProps> {
           textColor={
             tab === EXPLANATION_SCREEN ? theme.darkBlue : theme.veryLightText
           }
-          style={{ marginHorizontal: 4, padding: 0 }}
+          style={{
+            marginHorizontal: 4,
+            padding: 0,
+            borderWidth: 0,
+            borderBottomWidth: 0,
+          }}
           onPress={() => {
             haptic.impact(Haptic.ImpactFeedbackStyle.Light);
             navigation.navigate(EXPLANATION_SCREEN);

@@ -70,6 +70,7 @@ export const Header = ({
     }}
     textBreakStrategy={"simple"}
     allowFontScaling={allowFontScaling}
+    maxFontSizeMultiplier={1}
   >
     {children}
   </Text>
@@ -436,6 +437,9 @@ export const ActionButton = ({
       justifyContent: "center",
       alignItems: "center",
       maxHeight: 48,
+      borderColor: theme.darkBlue,
+      borderWidth: 1,
+      borderBottomWidth: 2,
       width,
       height,
       flex,
@@ -558,7 +562,7 @@ Container.propTypes = {
   children: PropTypes.any,
 };
 
-export const Label = ({ children, style }) => (
+export const Label = ({ children, style }: { children: any; style?: any }) => (
   <Text
     style={{
       fontWeight: "700",
@@ -646,4 +650,18 @@ export const Badge = ({
     </Text>
     <Feather name={featherIconName} size={16} color={theme.lightText} />
   </View>
+);
+
+export const CapsLabel = ({ children, style }) => (
+  <Text
+    style={{
+      fontSize: 10,
+      fontWeight: "700",
+      color: theme.lightText,
+      letterSpacing: 1,
+      ...style,
+    }}
+  >
+    {children}
+  </Text>
 );

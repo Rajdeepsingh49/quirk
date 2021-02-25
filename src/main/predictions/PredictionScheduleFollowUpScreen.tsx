@@ -21,8 +21,15 @@ import scheduleNotification from "../../notifications/scheduleNotification";
 import { PREDICTION_ONESIGNAL_TEMPLATE } from "../followups/templates";
 import dayjs from "dayjs";
 import { userScheduledPredictionFollowUp } from "./stats";
+import { scheduleBoost } from "../pulse/pulsestore";
+import { START_PREDICTION } from "../pulse/constants";
 
-type FollowUpSelections = "+3 hours" | "+1 day" | "+5 days" | string;
+type FollowUpSelections =
+  | "+3 hours"
+  | "+1 day"
+  | "+5 days"
+  | "+30 days"
+  | string;
 
 export default class PredictionScheduleFollowUpScreen extends React.Component<
   ScreenProps,
@@ -70,6 +77,12 @@ export default class PredictionScheduleFollowUpScreen extends React.Component<
         .toISOString();
     }
 
+    if (this.state.followUpOn === "+30 days") {
+      return dayjs()
+        .add(30, "day")
+        .toISOString();
+    }
+
     return dayjs(this.state.followUpOn).toISOString();
   };
 
@@ -84,6 +97,8 @@ export default class PredictionScheduleFollowUpScreen extends React.Component<
     await savePrediction(prediction);
 
     userScheduledPredictionFollowUp(this.state.followUpOn);
+
+    await scheduleBoost(START_PREDICTION);
 
     if (prediction.predictedExperience === "bad") {
       this.props.navigation.navigate(PREDICTION_REDIRECT_SCREEN, {
@@ -143,6 +158,11 @@ export default class PredictionScheduleFollowUpScreen extends React.Component<
             title="+5 days from now"
             onPress={() => this.onSelect("+5 days")}
             selected={this.state.followUpOn === "+5 days"}
+          />
+          <RoundedSelectorButton
+            title="+30 days from now"
+            onPress={() => this.onSelect("+30 days")}
+            selected={this.state.followUpOn === "+30 days"}
           />
 
           <ActionButton

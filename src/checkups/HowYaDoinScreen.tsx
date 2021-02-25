@@ -28,12 +28,12 @@ import { textInputStyle, textInputPlaceholderColor } from "../textInputStyle";
 import { get } from "lodash";
 import { MAIN_SCREEN } from "../screens";
 import dayjs from "dayjs";
-import { getUserID } from "../id";
-import { post } from "../api";
 import { CHECKUP_ONESIGNAL_TEMPLATE } from "../main/followups/templates";
-import Sentry from "../sentry";
 import { userFinishedCheckup } from "../stats";
 import scheduleNotification from "../notifications/scheduleNotification";
+import { CHECKUP_REDIRECT_SCREEN } from "./screens";
+import { scheduleBoost } from "../main/pulse/pulsestore";
+import { COMPLETE_CHECKUP, FELT_BETTER } from "../main/pulse/constants";
 
 export default class HowYaDoinScreen extends React.Component<
   ScreenProps,
@@ -70,14 +70,23 @@ export default class HowYaDoinScreen extends React.Component<
     haptic.notification(Haptic.NotificationFeedbackType.Success);
     await saveCheckup(this.state.checkup);
 
+    await scheduleBoost(COMPLETE_CHECKUP);
+    if (this.state.checkup.currentMood === "good") {
+      await scheduleBoost(FELT_BETTER);
+    }
+
     const nextCheckupDate = dayjs()
       .add(1, "week")
       .toISOString();
     await saveNextCheckupDate(nextCheckupDate);
-
     scheduleNotification(nextCheckupDate, CHECKUP_ONESIGNAL_TEMPLATE);
-
     userFinishedCheckup(this.state.checkup.currentMood);
+
+    if (this.state.checkup.currentMood === "bad") {
+      this.props.navigation.navigate(CHECKUP_REDIRECT_SCREEN);
+      return;
+    }
+
     this.props.navigation.navigate(MAIN_SCREEN);
   };
 
